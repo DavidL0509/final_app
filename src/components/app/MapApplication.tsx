@@ -12,7 +12,7 @@ import { Draw } from "ol/interaction";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import { Circle as CircleStyle, Fill, Icon, Stroke, Style } from "ol/style";
-import { Circle } from "ol/geom";
+import { Circle, Point } from "ol/geom";
 import { MapboxVectorLayer } from "ol-mapbox-style";
 
 useGeographic();
@@ -105,6 +105,11 @@ export function MapApplication() {
       const features = vehicleLayer
         .getSource()
         ?.getFeaturesInExtent(extent)
+        .filter((f) =>
+          circle.intersectsCoordinate(
+            (f.getGeometry() as Point).getCoordinates(),
+          ),
+        )
         .map((feature) => feature.getProperties().routeId);
       console.log({ center, radius, coordinates, extent, features });
     });
