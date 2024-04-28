@@ -12,10 +12,17 @@ import { Draw } from "ol/interaction";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import { Circle, Fill, Icon, Stroke, Style } from "ol/style";
+import { MapboxVectorLayer } from "ol-mapbox-style";
 
 useGeographic();
 
-const backgroundLayer = new TileLayer({ source: new OSM() });
+const openStreetMapLayer = new TileLayer({ source: new OSM() });
+const vectorTileLayer = new MapboxVectorLayer({
+  styleUrl: "mapbox://styles/mapbox/dark-v9",
+  accessToken:
+    "pk.eyJ1IjoiYWRtaW5kYXZpZCIsImEiOiJjbHZqZWhlcjUxa2NvMnFwZXRhbTdrM3A4In0.eK-JWXHHH5VHtEyirzOmtw",
+});
+
 const map = new Map({
   view: new View({ center: [9.5, 59.5], zoom: 8.2 }),
 });
@@ -54,7 +61,7 @@ const ferryStyle = [
 export function MapApplication() {
   const { vehicleLayer, vehicleTrailLayer } = useVehicleLayer();
   const layers = useMemo(
-    () => [backgroundLayer, vehicleTrailLayer, vehicleLayer, drawingLayer],
+    () => [vectorTileLayer, vehicleTrailLayer, vehicleLayer, drawingLayer],
     [vehicleLayer, vehicleLayer],
   );
   useEffect(() => map.setLayers(layers), [layers]);
