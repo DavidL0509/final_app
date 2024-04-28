@@ -11,7 +11,8 @@ import "./app.css";
 import { Draw } from "ol/interaction";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
-import { Circle, Fill, Icon, Stroke, Style } from "ol/style";
+import { Circle as CircleStyle, Fill, Icon, Stroke, Style } from "ol/style";
+import { Circle } from "ol/geom";
 import { MapboxVectorLayer } from "ol-mapbox-style";
 
 useGeographic();
@@ -34,7 +35,7 @@ const drawingLayer = new VectorLayer({
 
 const trainStationStyle = [
   new Style({
-    image: new Circle({
+    image: new CircleStyle({
       fill: new Fill({ color: "lightgray" }),
       stroke: new Stroke({ color: "black", width: 2 }),
       radius: 20,
@@ -47,7 +48,7 @@ const trainStationStyle = [
 
 const ferryStyle = [
   new Style({
-    image: new Circle({
+    image: new CircleStyle({
       fill: new Fill({ color: "lightblue" }),
       stroke: new Stroke({ color: "black", width: 2 }),
       radius: 20,
@@ -94,6 +95,18 @@ export function MapApplication() {
     map.addInteraction(draw);
     drawingSource.once("addfeature", (event) => {
       map.removeInteraction(draw);
+      const circle = event.feature!.getGeometry() as Circle;
+      const center = circle.getCenter();
+      const radius = circle.getRadius();
+      const coordinates = circle.getCoordinates();
+
+      const extent = circle.getExtent();
+
+      const features = vehicleLayer
+        .getSource()
+        ?.getFeaturesInExtent(extent)
+        .map((feature) => feature.getProperties().routeId);
+      console.log({ center, radius, coordinates, extent, features });
     });
   }
 
