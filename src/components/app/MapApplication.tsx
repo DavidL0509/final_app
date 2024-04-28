@@ -89,12 +89,20 @@ export function MapApplication() {
     });
   }
 
+  function handleClickAddCircle() {
+    const draw = new Draw({ type: "Circle", source: drawingSource });
+    map.addInteraction(draw);
+    drawingSource.once("addfeature", (event) => {
+      map.removeInteraction(draw);
+    });
+  }
+
   return (
     <>
       <header>
         <button onClick={handleClickAddStation}>Add train station</button>
         <button onClick={handleClickAddFerry}>Add ferry</button>
-        <button>Add circle</button>
+        <button onClick={handleClickAddCircle}>Add circle</button>
       </header>
       <div ref={mapRef}></div>
     </>
