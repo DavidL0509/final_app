@@ -74,7 +74,7 @@ export function MapApplication() {
   function handleClickAddStation() {
     const draw = new Draw({ type: "Point", source: drawingSource });
     map.addInteraction(draw);
-    drawingSource.on("addfeature", (event) => {
+    drawingSource.once("addfeature", (event) => {
       map.removeInteraction(draw);
       event.feature?.setStyle(trainStationStyle);
     });
@@ -83,7 +83,7 @@ export function MapApplication() {
   function handleClickAddFerry() {
     const draw = new Draw({ type: "Point", source: drawingSource });
     map.addInteraction(draw);
-    drawingSource.on("addfeature", (event) => {
+    drawingSource.once("addfeature", (event) => {
       map.removeInteraction(draw);
       event.feature?.setStyle(ferryStyle);
     });
